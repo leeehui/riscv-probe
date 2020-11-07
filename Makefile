@@ -68,7 +68,9 @@ endif
 #
 # Build system functions to generate pattern rules for all configs
 #
-
+# $(1): build cmd e.g. CC AS ...
+# $(2): arch e.g. rv32imac rv64imac ...
+# $(3): depend file suffix e.g. s for asm files ,  c for c files
 define pattern =
 build/obj/$(2)/%.o: %.$(3)
 	$(call cmd,$(1).$(2) $$@,$$(@D),$(CC_$(2)) $(CFLAGS_$(2)) $(CFLAGS) \
@@ -88,6 +90,7 @@ build/lib/$(2)/$(3).a: $(addprefix build/obj/$(2)/,$($(3)_objs))
 LIBS_$(2) += build/lib/$(2)/$(3).a
 endef
 
+# $(1): lib name e.g. libfemto
 define lib =
 $(foreach c,$(configs),$(eval $(call archive,AR,$(c),$(1))))
 INCLUDES += -I$(1)/include
